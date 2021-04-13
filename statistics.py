@@ -1,9 +1,8 @@
 import pandas
 import sys
-import Statistics
 import math
 
-values=[1,1,1,4,1,3,1,1]
+
 def sum(values: list):
     sum = 0
     for value in values:
@@ -11,22 +10,21 @@ def sum(values: list):
     return sum
 
 def mean(values: list):
-    return sum(values) / len(values)
+    return (sum(values) / len(values)) if len(values)!=0 else  0
 
 def median(values: list):
     length = len(values)
     sorted_values = sorted(values)
+    if length==0: return 0
     if length % 2 ==0 :
         median = (sorted_values[int(length / 2)] + sorted_values[int(length / 2) - 1])
         median /= 2
 
     else:
-        median = math.ceil(len(sorted_values) / 2)
-    return int(median)
+        median = float(sorted_values[math.floor(len(sorted_values) / 2)])
+    return median
 
-print(sum(values))
-print(mean(values))
-print(median(values))
+
 
 
 

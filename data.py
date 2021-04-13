@@ -1,18 +1,5 @@
-from typing import Dict
 
 import pandas
-
-features = ["hum", "t1", "cnt", "season", "is_holiday"]
-"""
-xl = {'names': ['omer', 'yogev'], 'age': '25', 'city': 'motzkin'}
-feature = ["names"]
-data = {}
-for key in xl.keys():
-    if key in feature:
-        data[key] = xl[key]
-print(data)
-"""
-
 
 def load_data(path, features):
     """
@@ -31,46 +18,66 @@ def load_data(path, features):
 
     return data
 
-
-feature = "season"
-values = {1}
-dict = {'season': [0,1,1,0,1]}
-
-
-data1 = {feature: []}
-data2 = {feature: []}
-for key in dict.keys():
-    if key == feature:
-        for value in dict[key]:
-            if value in values:
-                data1[key].append(value)
-            else:
-                data2[key].append(value)
-print (data1, data2)
-
-"""
-def filter_by_fiture(data,feature, values):
-
-    """"""
+def filter_by_feature(dict, feature, value):
+    """
     :param data: full dictionary from the exel file
     :param feature: the desire key, string
     :param values: a set of integers. A range of achievable values
     :return: two dictionaries, one with the required values and the other with the complementary values
-    """"""
-    data1 = {feature: []}
-    data2 = {feature: []}
-    for key in dict.keys():
-        if key == feature:
-            for value in dict[key]:
-                if value in values:
-                    data1[key].append(value)
-                else:
-                    data2[key].append(value)
-    
-    return (data1, data2)
-"""
+    """
+    dict_1 = {}
+    dict_2 = {}
+    values_of_feature = [0 if a==value else 1 for a in dict.get(feature)]
+    for key in dict:
+        d1_key_value = []  # good
+        d2_key_value= [] #bad
+        for i in range(len(values_of_feature)):
+            # checks for each item which dictionary is appropriate for him
+            d2_key_value.append(dict.get(key)[i]) if values_of_feature[i] else d1_key_value.append(dict.get(key)[i])
+        dict_1.update({key: d1_key_value})
+        dict_2.update({key: d2_key_value})
+    return (dict_1, dict_2)
+
+def print_details(data, features, statistic_functions):
+    for feature in features:
+        outputs = []
+        for func in statistic_functions:
+            output = func(data.get(feature))  # sends the appropriate data
+            outputs.append(str(output))
+        print(f'{feature}: ' + ', '.join(outputs))
 
 
+def filter_by_threshold(data, treatment, threshold, is_above):
+    """"
+    :param data: full dictionary from the exel file
+    :param treatment: the desire key, string
+    :param threshold: an int that signs a limit of values
+    :param is_above: 1 or 0, check above the threshold or under
 
+    :return: one dictionary, depends on the 'is_above' variable
+    """
+    dict_1 = {}
+    dict_2 = {}
+    values_of_feature = [0 if a > threshold else 1 for a in data.get(treatment)]
+    for key in data:
+        d1_key_value = []  # above threshold
+        d2_key_value = []  # equal or under threshold
+        for i in range(len(values_of_feature)):
+            # checks for each item which dictionary is appropriate for him
+            d2_key_value.append(data.get(key)[i]) if values_of_feature[i] else d1_key_value.append(data.get(key)[i])
+        dict_1.update({key: d1_key_value})
+        dict_2.update({key: d2_key_value})
+    return dict_1 if is_above else dict_2
+
+
+def population_statistics(feature_description, data, treatment, target,
+                          threshold, is_above, statistic_functions):
+    dict_above = filter_by_threshold(data, treatment, threshold, is_above)
+    print(f"{feature_description}")
+    outputs = []
+    for func in statistic_functions:
+        output = func(dict_above.get(target))  # sends the appropriate data
+        outputs.append(str(output))
+    print(f'{target}: ' + ', '.join(outputs))
 
 
