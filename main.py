@@ -10,14 +10,14 @@ def main(argv):
     features: list = str_input.split(", ")
     data = Data.load_data(argv[1], features)
     statistic_functions = [statistics.sum, statistics.mean, statistics.median]
-    List = ["hum", "t1", "cnt"]
-    summer = 1
-    winter = 3
-    holiday = 1
+    List = features[:3]
+    SUMMER = 1
+    WINTER = 3
+    HOLIDAY = 1
     ###########################################################################
-    print(features[3])
-    data_summer, holder = Data.filter_by_feature(data, features[3], summer)
-    data_holiday, holder = Data.filter_by_feature(data, features[4], holiday)
+
+    data_summer, holder = Data.filter_by_feature(data, features[3], SUMMER)
+    data_holiday, holder = Data.filter_by_feature(data, features[4], HOLIDAY)
     print(f"Question 1:")
     print(f"Summer:")
     Data.print_details(data_summer, List, statistic_functions)
@@ -29,8 +29,8 @@ def main(argv):
     THRESHOLD = 13
     descriptions = ["Winter holiday recordes:", "Winter weekday records:"]
 
-    data_winter, holder = Data.filter_by_feature(data, features[3], winter)
-    data_holiday, data_weekday = Data.filter_by_feature(data_winter, features[4], holiday)
+    data_winter, holder = Data.filter_by_feature(data, features[3], WINTER)
+    data_holiday, data_weekday = Data.filter_by_feature(data_winter, features[4], HOLIDAY)
     list1 = [data_holiday, data_weekday]
     statistic_functions_2 = [statistics.mean, statistics.median]
     signes_list = ["<=", ">"]
